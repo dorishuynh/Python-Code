@@ -1,0 +1,66 @@
+# Import all the libaries needed
+import gpiozero
+from gpiozero import LED
+import time
+
+#Define the LEDs
+redLED = LED(5) #Physical pin 29
+greenLED = LED(13) #Physical pin 33
+blueLED = LED(26) #Physical pi 37
+
+#Create a list to use in loop later 
+lights = (redLED, greenLED, blueLED)
+
+#Define the stop light function
+def stopLight(trafficLight):
+    redVal = trafficLight['red']
+    greenVal = trafficLight['green']
+    blueVal = trafficLight['blue']
+    
+    #Create a list with the LED values, either 1 or 0.
+    ledState = [redVal, greenVal, blueVal]
+    print(ledState)
+    
+    #Enumerate allow to loop both INDEX and the value of a dictionary. 
+    for index, value in enumerate(ledState):
+        if value == 1: 
+            lights[index].off()
+            time.sleep(1)
+            lights[index].on()
+            time.sleep(1)
+        else:
+            lights[index].off()
+    
+    
+def main():
+    print('Welcome to The STEM Makey Bot')
+    
+    #Ask for user input
+    while(True):
+        color = input('What color (between red, green and blue) do you want to light up? > ')
+        if color == 'red' or color == 'green' or color == 'blue':
+                print('Your chosen color is ', color)
+                break
+        else:
+                print('Invalid, please choose one of the three options')
+                continue
+    
+    #Default value of dictionary.
+    trafficLight = {'red': 0, 'green': 0, 'blue': 0}
+    
+    #Change dictionary value based on user input
+    if color == 'red':
+        trafficLight['red'] = 1
+    elif color == 'green':
+        trafficLight['green'] = 1
+    elif color == 'blue':
+        trafficLight['blue'] = 1
+    
+    #Print out the chosen color and the dictionary
+    print(f'Because you chose' + color + 'so the value of your traffic light is \n')
+    print(trafficLight)
+    
+    #Pass the dictionary to the function
+    stopLight(trafficLight)
+    
+main()
