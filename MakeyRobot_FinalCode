@@ -1,0 +1,172 @@
+# Import all the libaries needed
+import gpiozero
+from gpiozero import RGBLED
+from gpiozero import LED
+from gpiozero import Servo 
+import time
+import sys
+
+#Define servo and calibrate.
+minCorrection = 0.6
+maxCorrection = 0.4
+minPW = (1-minCorrection)/1000
+maxPW = (2+maxCorrection)/1000
+servo = Servo(17, min_pulse_width = minPW, max_pulse_width = maxPW)
+
+#Define the LEDs
+left = RGBLED(5, 13, 26) #Physical pin 29 for red, 33 for green, 37 for blue.
+right = RGBLED(10, 9, 11) #Physical pin 11, 13, 15. 
+red = LED(24)
+green = LED(23)
+blue = LED(25)
+
+def testing():
+    check0 = input('Do you want to test your component? y/n > ')
+    if check0 == 'y':
+        print('Testing started')
+        while True:
+            left.color = (1,1,1)
+            right.color = (1,1,1)
+            check1 = input('RGB Lighting up, y/n? > ')
+            if check1 =='y':
+                print('RGB is working')
+                left.color = (0,0,0)
+                right.color = (0,0,0)
+                break
+            elif check1 == 'n':
+                print('RGB is not working, find error, rerun')
+                sys.exit()
+            else:
+                print('Not an acceptable answer, recheck.')
+        
+        while True:
+            red.on()
+            green.on()
+            blue.on()
+            check2 = input('LEDS Lighting up, y/n? > ')
+            if check2 == 'y':
+                print('LED is working')
+                red.off()
+                green.off()
+                blue.off()
+                break
+            elif check2 == 'n':
+                print('LEDs are not working, find error, rerun')
+                sys.exit()
+            else:
+                print('Not an acceptable answer, recheck.')
+                continue
+            
+        while True:
+            #Can put max, the arm is in the way.
+            servo.max()
+            time.sleep(1)
+            servo.mid()
+            time.sleep(1)
+            check3 = input('Servo running, y/n? > ')
+            if check3 == 'y':
+                print('Servo is working.')
+                break
+            elif check3 == 'n':
+                print('Servo is not working, find error, rerun.')
+                sys.exit()
+            else:
+                print('Not an acceptable answer, recheck.')
+                
+        print('All components are working.')
+        
+    
+    if check0 == 'n':
+        print('Okay then, problems are on you.')
+    
+
+def rgb():            
+    def userInput():
+        #Ask for user input
+        while(True):
+            hexVal = input('Give me a hex color for the eyes! > ')
+            if len(hexVal) == 7:
+                if hexVal[0] == '#':
+                    break
+                else:
+                    print('Hex number must start with #')
+                    continue
+            else:
+                print('Hex number has only 6 digits')
+                continue
+            
+        hexRed = hexVal[1:3].upper()
+        #hexRed, 16 return the value of hexRed in base 16 (hex letter to decimal value.
+        #And then divided that number by 255. (decimal value to rgb value that this code understand)
+        redVal = int(hexRed, 16)/255 
+        
+        hexGreen = hexVal[3:5].upper()
+        greenVal = int(hexGreen, 16)/255
+        
+        hexBlue = hexVal[5:7].upper()
+        blueVal = int(hexBlue, 16)/255
+        
+        print(hexRed, hexGreen, hexBlue)
+        print(redVal, greenVal, blueVal)
+        
+        return redVal, greenVal, blueVal
+      
+    
+    print('Welcome to The STEM Makey Bot')
+    color = userInput()  # Ask for a color.
+    print(color)
+    eyes = {
+        'leftEyes' : {'red': color[0], 'green': color[1], 'blue': color[2]}, 
+        'rightEyes' : { 'red' : color[0], 'green' : color[1], 'blue' : color[2]}
+    }
+    print(eyes)
+    return eyes
+
+def led():
+    print('blue light on')
+    blue.on()
+    time.sleep(0.5)
+    blue.off()
+    
+    print('red light on')
+    red.on()
+    time.sleep(0.5)
+    red.off()
+    
+    print('green light on')
+    green.on()
+    time.sleep(0.5)
+    green.off()
+    
+
+def arm():
+    for i in range(3):
+        servo.max()
+        time.sleep(0.5)
+        servo.mid()
+        time.sleep(0.5)
+
+def robot():
+    testing()
+    proceed = input('Do you want to proceed? y/n > ')
+    
+    if proceed == 'y':
+        eyesList = rgb()  # This should now work since rgb() returns values.
+        print(eyesList)
+        
+        leftVal = eyesList['leftEyes']['red'], eyesList['leftEyes']['green'], eyesList['leftEyes']['blue']
+        print(leftVal)
+        
+        rightVal = eyesList['rightEyes']['red'], eyesList['rightEyes']['green'], eyesList['rightEyes']['blue']
+        print(rightVal)
+        
+        while True:
+            left.color = leftVal
+            right.color = rightVal
+            led()
+            arm()
+            
+    elif proceed == 'n':
+        print('Alright then, bye! \n\nMAKEY BOT DONE.')
+    
+robot()
