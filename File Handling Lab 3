@@ -1,0 +1,60 @@
+# File Handling Lab 3
+# Doris, Last Updated 4/1/2025.
+
+# Opening File Handles and reading data from files
+print('''
+This Lab is about opening a file handle, and reading 
+the file, line by line using the file method: 
+- file_handle = open(file_name) method
+      ''')
+# Challenges
+print('''
+Challenge #1 & #2
+----------------------------------------------------
+#1 - Edit the code below to count each line, 
+     and print the total out at the end
+      
+#2 - Edit the code below to open the text-file-mail-short.txt file
+---
+''')
+# -------------------------------------------------
+print('''Answer to Challenges
+-------------------------------------------------''')
+# -----------------------------
+
+# Challenge 1.
+# Print out each line of matrix.txt and count the line.
+
+print('CHALLENGE 1')
+file1 = open('text-file-matrix.txt')
+
+count1 = 0
+for line in file1:
+    print(line)
+    count1 += 1
+
+print('Line Count for text-file-matrix.txt:', count1)
+print('''
+-------------------------------------------------''')
+
+# Challenge 2
+# Print out each like of the mail-short.txt and count the line.
+
+print('CHALLENGE 2')
+file2 = open('text-file-mail-very-short.txt')
+
+count2 = 0
+for line in file2:
+    print(line)
+    count2 += 1
+
+print('Line Count for text-file-mail-very-short.txt:', count2)
+
+# Extra Twist:
+print('\nLets sum up!')
+print(f'The total line for text-file-matrix.txt is {count1}')
+print(f'The total line for text-file-mail-very-short.txt is {count2}')
+print(f'The total line for both files is {count1 + count2}')
+
+#Complete.
+print('\nComplete All Challenges')
