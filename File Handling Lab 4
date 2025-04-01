@@ -1,0 +1,43 @@
+# File Handling Lab 4
+# Doris, Last Updated 4/1/2025.
+
+# Opening File Handles and reading data from files
+print('''
+This Lab is about opening a file handle, and reading 
+the file, printing line by line, and striping the 
+extra /n at the end of a line in a file
+      ''')
+# Challenges
+print('''
+Challenge #1
+----------------------------------------------------
+#1 - Edit the code below to not print 
+     the extra "\\n" on each line
+Hint: Use a String Method that will "strip" a character. 
+- https://www.w3schools.com/python/python_strings_methods.asp
+
+#2 - Edit the code below to open the text-file-mail-very-short.txt file
+---
+''')
+# -------------------------------------------------
+print('''Answer to Challenges
+-------------------------------------------------''')
+# -----------------------------
+
+# Challenge 1.
+# Fix the code so there is no extra space.
+print('CHALLENGE 1')
+file1 = open('text-file-matrix.txt')
+for line in file1:
+	print(line.strip()) #Use strip to strip off each line so there's no extra space when printinh, the space now are from the print() not the line.
+print('Done Challenge 1')
+
+# Challenge 2.
+# Do the same for text-file-very-short.text file.
+print('\nCHALLENGE 2')
+file2 = open('text-file-mail-very-short.txt')
+for line in file2:
+    print(line.strip()) #The same principle as challenge 1.
+print('Done Challenge 2')
+
+print('\nCOMPLETE ALL CHALLENGES')
