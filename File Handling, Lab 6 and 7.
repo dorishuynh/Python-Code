@@ -1,0 +1,180 @@
+#Doris Huynh, last edit 4/4/2025.
+#Lab 6 and Lab 7, File Handling.
+
+# Finding Stuff
+# You can get the following file with wget
+# sudo wget -O text-flie-matrix.txt https://raw.githubusercontent.com/jimTheSTEAMClown/Python-Class-STEAM-Clown/refs/heads/main/text-file-matrix.txt
+# sudo wget -O text-file-mail-very-short.txt https://raw.githubusercontent.com/jimTheSTEAMClown/Python-Class-STEAM-Clown/refs/heads/main/text-file-mail-very-short.txt
+# sudo wget -O text-file-mail-short.txt https://raw.githubusercontent.com/jimTheSTEAMClown/Python-Class-STEAM-Clown/refs/heads/main/text-file-mail-short.txt
+# sudo wget -O text-file-mail-long.txt https://raw.githubusercontent.com/jimTheSTEAMClown/Python-Class-STEAM-Clown/refs/heads/main/text-file-mail-long.txt
+import re
+from datetime import datetime
+
+
+print('''
+Use the String Methods to find stuff
+
+  1) Can you find all the lines that start with "From:"
+  2) What about line that start with "To:"
+  3) Find all the lines with an email addresses
+    - How would you find them?
+    - Hint: split the line into a list of "words" then look for emails
+  4) Dates? Can you find the line with the oldest "Date" 'Date: 2008-01-04 11:11:00 -0500 (Fri, 04 Jan 2008)'
+    - Same Hint an 3
+      
+      ''')
+xfile = open('text-file-mail-very-short.txt')
+
+#Call all of the variable here.
+#Call them again in function (if error occurs) by using global.
+count1 = 0
+count2 = 0
+count3 = 0
+listFrom = []
+listTo = []
+listMail = []
+listDate = []
+uniDates = [] 
+
+#This list will count the occurence time.
+#And generate a list.
+def originalList():
+    global count1, count2, count3
+    for line in xfile:
+        print(line.strip())
+        
+        if line.startswith('From:'):
+            count1 += 1
+            x = line.split()
+            for i in x:
+                if '@' in i:
+                    listFrom.append(i.strip())
+        
+        if line.startswith('To:'):
+            count2 += 1
+            x = line.split()
+            for i in x:
+                if '@' in i:
+                    listTo.append(i.strip())
+            
+        
+        words = line.split()
+        for i in words:
+            if '@' in i:
+                if i not in listMail:
+                    listMail.append(i)
+                    count3 += 1
+        
+        #Here I use re.findall to find componenet with that format in my list.
+        #That pattern is my date, and since I have 2 date types I have two patterns. 
+        if line.startswith('Date:'):
+            a = re.findall("\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}", line)
+            if a:
+                listDate.extend(a)
+            b = re.findall("\d{1}\s[a-zA-Z]{3}\s\d{4}\s\d{2}:\d{2}:\d{2}", line)
+            if b: 
+                listDate.extend(b)
+                
+    print(f'\nThe total email address found is {count3}')     
+    print(f'The number of line start with From: is {count1}')
+    print(f'The number of line start with To: is {count2}')
+    
+    return listFrom, listTo, listMail, listDate
+
+#I use this list to put all of my dates in the listDate into it universal date time format.
+def universalDate(dates): #date is each element in listDate.
+    try:
+        return datetime.strptime(dates, "%d %b %Y %H:%M:%S") #For dates in the format like 5 Jan 2012
+    except ValueError:
+        pass
+    
+    try:
+        return datetime.strptime(dates, "%Y-%m-%d %H:%M:%S") #For dates in the formate like 2009-07-26
+    except ValueError:
+        pass
+    
+    return None #If no format macthes.
+
+
+
+#This function find the oldest date by passing listDate to the function universalDate.
+#universalDate convert listDate from normal format to universal format.
+#Then create another list call uniDates to put all of the universal dates in.
+#Then we find the oldest date from the universal dates list. 
+def oldDates():
+    global uniDates
+    for d in listDate:
+        x = universalDate(str(d))
+        if x is not None:
+            uniDates.append(x)
+    if uniDates:
+        oldestDate = min(uniDates)
+        print(f'The oldest date found is {oldestDate}')
+    else:
+        print(f'No date detected')
+
+
+#This is the main function, all function are called here.
+#I also put a user input to keep things organized. 
+def main():
+    originalList()
+    oldDates()
+    while True:
+        user1 = input('\nDo you want to see the email list? y/n > ')
+        if user1 == 'y':
+            print('\nGot it, here is your list \n', listMail)
+            break
+        elif user1 == 'n':
+            print('\nAlright.')
+            break
+        else:
+            print('\nNo answer detected, answer again.')
+            continue
+        
+    while True:
+        user2 = input('\nDo you want to see all of the From: line? y/n > ')
+        if user2 == 'y':
+            print('\nGot it, here is your lines \n', listFrom)
+            break
+        elif user2 == 'n':
+            print('\nAlright.')
+            break
+        else:
+            print('\nNo answer detected, answer again.')
+            continue
+    
+    while True:
+        user3 = input('\nDo you want to see all of the To: list? y/n > ')
+        if user3 == 'y':
+            print('\nGot it, here is your lines \n', listTo)
+            break
+        elif user3 == 'n':
+            print('\nAlright.')
+            break
+        else:
+            print('\nNo answer detected, answer again.')
+            continue
+    
+    while True:
+        user4 = input('\nDo you want to see the date list? y/n > ')
+        if user4 == 'y':
+            print('\nGot it, here is your list \n', listDate)
+            break
+        elif user4 == 'n':
+            print('\nAlright.')
+            break
+        else:
+            print('\nNo answer detected, answer again.')
+            continue
+
+
+
+main()
+      
+             
+
+
+
+
+
+ 
